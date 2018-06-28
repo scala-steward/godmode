@@ -1,4 +1,6 @@
+
 name := "godmode"
+organization := "com.jcranky.godmode"
 scalaVersion := "2.12.6"
 
 version := "0.1"
@@ -30,3 +32,9 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "com.lihaoyi" %% "utest" % "0.6.4" % "test"
 )
+
+bintrayReleaseOnPublish in ThisBuild := false
+
+licenses += ("GPL-3.0", url("http://www.opensource.org/licenses/gpl-3.0.html"))
+
+bintrayPackageLabels := Seq("cats", "cats-effect", "io", "godmode")
