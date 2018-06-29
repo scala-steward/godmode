@@ -7,7 +7,7 @@ import utest.ufansi.Attrs
 class GodModeTestFramework extends Framework {
 
   override def exceptionStackFrameHighlighter(s: StackTraceElement): Boolean = {
-    s.getClassName.contains("porteiro")
+    s.getClassName.contains("godmode")
   }
 
   override def exceptionLineNumberColor: Attrs = toggledColor(ufansi.Color.Cyan)
