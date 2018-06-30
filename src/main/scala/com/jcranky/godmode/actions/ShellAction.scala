@@ -17,7 +17,7 @@ case class ShellAction(cmd: String, verbose: Boolean = false) {
 
   def compile[F[_]](implicit F: Sync[F]): F[String] = {
 
-    // this is necessary so command that piping and commands like "cut -d ' ' -f5" can be parsed and work correctly
+    // this is necessary so that command piping and commands like "cut -d ' ' -f5" can be parsed and work correctly
     def toBash(cmd: String): Seq[String] =
       Seq("bash", "-c", cmd)
 
@@ -40,13 +40,11 @@ case class ShellAction(cmd: String, verbose: Boolean = false) {
       p.exitValue()
     } <* verbosity
 
-    // need to return all errs and outs ........... fucker
-
     delayedProcess.flatMap { exit =>
       if (exit != 0)
         F.raiseError(new RuntimeException(s"shell action failed:\n${errs.mkString("\n")}"))
       else
-      // TODO: bleh, stuff goes to err as well !!! what is the 'right' way to deal with this?
+      // TODO: bleh, stuff goes to err as well !!! what is the 'right' way to deal with this? return both maybe?
       // TODO: also, for some reason not everything seems to be being sent to outs, when the output too long :(
         F.pure(outs.mkString("\n"))
     }
