@@ -8,11 +8,14 @@ import scala.concurrent.duration._
 
 object Retry {
 
-  def retry[F[_], A](ioa: F[A], initialDelay: FiniteDuration = 1.second, maxRetries: Int = 7)(implicit timer: Timer[F], F: Sync[F]): F[A] =
-    ioa.handleErrorWith { error =>
-      if (maxRetries > 0)
-        timer.sleep(initialDelay) *> retry(ioa, initialDelay * 2, maxRetries - 1)
-      else
-        F.raiseError(error)
-    }
+  implicit class RetryOps[F[_], A](fa: F[A]) {
+
+    def retry(initialDelay: FiniteDuration = 1.second, maxRetries: Int = 7)(implicit timer: Timer[F], F: Sync[F]): F[A] =
+      fa.handleErrorWith { error =>
+        if (maxRetries > 0)
+          timer.sleep(initialDelay) *> fa.retry(initialDelay * 2, maxRetries - 1)
+        else
+          F.raiseError(error)
+      }
+  }
 }
