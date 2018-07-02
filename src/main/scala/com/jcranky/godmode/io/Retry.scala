@@ -10,10 +10,10 @@ object Retry {
 
   implicit class RetryOps[F[_], A](fa: F[A]) {
 
-    def retry(initialDelay: FiniteDuration = 1.second, maxRetries: Int = 7)(implicit timer: Timer[F], F: Sync[F]): F[A] =
+    def retry(delay: FiniteDuration = 1.second, maxRetries: Int = 7)(implicit timer: Timer[F], F: Sync[F]): F[A] =
       fa.handleErrorWith { error =>
         if (maxRetries > 0)
-          timer.sleep(initialDelay) *> fa.retry(initialDelay * 2, maxRetries - 1)
+          F.delay(println(s"F[A] failed with [$error], retrying")) *> timer.sleep(delay) *> fa.retry(delay * 2, maxRetries - 1)
         else
           F.raiseError(error)
       }
