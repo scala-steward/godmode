@@ -37,5 +37,12 @@ object ScalyrActionTest extends TestSuite {
         assert(query === """"text to search" "jcranky"""")
       }
     }
+
+    "assemble the final scalyr command line" - {
+      val line = action.scalyrLine
+      val expected = """./scalyr query ' $serverHost="my-app-host"  "text to search" "jcranky"' --token="my-token" --server="eu.scalyr.com" --start="10 minutes" --output json | jq .matches[].message"""
+
+      assert(line === expected)
+    }
   }
 }

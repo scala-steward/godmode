@@ -22,7 +22,7 @@ case class ScalyrAction(config: ScalyrConfig, queryTerms: NonEmptyList[String], 
 
   // full assembled scalyr command line to be executed
   val scalyrLine: String =
-    s"""$scalyrBaseCmd '$logHostFilter "$query"' $token $scalyrHost $startFilter --output json | jq .matches[].message"""
+    s"""$scalyrBaseCmd '$logHostFilter $query' $token $scalyrHost $startFilter --output json | jq .matches[].message"""
 
   def dryRun[F[_] : Sync]: F[String] =
     Sync[F].pure(scalyrLine)
