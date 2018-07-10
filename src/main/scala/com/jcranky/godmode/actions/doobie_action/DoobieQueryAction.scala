@@ -10,11 +10,11 @@ import doobie.util.log.LogHandler
 import doobie.util.transactor.Transactor
 
 // TODO: "failIfEmpty" would be better as a more re-usable fail condition
-case class DoobieQueryAction(fragment: Fragment, failIfEmpty: Boolean = false, logQueries: Boolean = false) {
+case class DoobieQueryAction[F[_]](fragment: Fragment, failIfEmpty: Boolean = false, logQueries: Boolean = false) {
 
   // TODO: dryRun?
 
-  def compile[F[_], T: Composite](xa: Transactor[F])(implicit F: Async[F]): F[List[T]] = {
+  def compile[T: Composite](xa: Transactor[F])(implicit F: Async[F]): F[List[T]] = {
     implicit val logHandler: LogHandler =
       if (logQueries) LogHandler.jdkLogHandler else LogHandler.nop
 
