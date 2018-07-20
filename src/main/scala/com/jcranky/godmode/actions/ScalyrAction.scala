@@ -2,7 +2,7 @@ package com.jcranky.godmode.actions
 
 import cats.data.NonEmptyList
 import cats.effect.Sync
-import cats.syntax.functor._
+import cats.syntax.flatMap._
 
 // TODO: this assumes `jq` installed, probably not a good idea
 /**
@@ -28,15 +28,18 @@ case class ScalyrAction(config: ScalyrConfig, queryTerms: NonEmptyList[String], 
     Sync[F].pure(scalyrLine)
 
   def compile[F[_]](implicit F: Sync[F]): F[String] =
+    ShellAction(scalyrLine).compile[F].flatMap(cleanLog[F])
+
   // TODO: a bit of brute force `replace`s to make the output more readable, need a better way to do this
-    ShellAction(scalyrLine).compile[F].map(_
-      .replace(raw"\n", "")
+  def cleanLog[F[_]](rawLog: String)(implicit F: Sync[F]): F[String] = F.delay {
+    rawLog.replace(raw"\n", "")
       .replace(raw"\\", "")
       .replace("\\\"", "\"")
       .replace("\"{\"log\":\"", "")
       .replace("\"}\"", "")
-    )
-
+      .replaceAll("u003c", "<")
+      .replaceAll("u003e", ">")
+  }
 }
 
 case class ScalyrConfig(scalyrHome: String, host: String, token: String, scalyrServer: ScalyrServer)

@@ -3,7 +3,7 @@ name := "godmode"
 organization := "com.jcranky"
 scalaVersion := "2.12.6"
 
-version := "0.1-M5"
+version := "0.1-M6"
 
 scalacOptions ++= Seq(
   "-deprecation",

@@ -1,6 +1,7 @@
 package com.jcranky.godmode.actions
 
 import cats.data.NonEmptyList
+import cats.effect.IO
 import cats.instances.string._
 import cats.syntax.eq._
 import utest._
@@ -43,6 +44,15 @@ object ScalyrActionTest extends TestSuite {
       val expected = """./scalyr query ' $serverHost="my-app-host"  "text to search" "jcranky"' --token="my-token" --server="eu.scalyr.com" --start="10 minutes" --output json | jq .matches[].message"""
 
       assert(line === expected)
+    }
+
+    "clean the output log data" - {
+      "replace encoded < and > with the actual characters" - {
+        val rawLog = "u003cTAGu003e"
+        val result = action.cleanLog[IO](rawLog).unsafeRunSync()
+
+        assert(result === "<TAG>")
+      }
     }
   }
 }
