@@ -3,6 +3,7 @@ package com.jcranky.godmode.actions
 import cats.data.NonEmptyList
 import cats.effect.Sync
 import cats.syntax.flatMap._
+import cats.syntax.functor._
 
 // TODO: this assumes `jq` installed, probably not a good idea
 /**
@@ -24,21 +25,31 @@ case class ScalyrAction(config: ScalyrConfig, queryTerms: NonEmptyList[String], 
   val scalyrLine: String =
     s"""$scalyrBaseCmd '$logHostFilter $query' $token $scalyrHost $startFilter --output json | jq .matches[].message"""
 
-  def dryRun[F[_] : Sync]: F[String] =
-    Sync[F].pure(scalyrLine)
+  def dryRun[F[_] : Sync]: F[List[String]] =
+    Sync[F].pure(List(scalyrLine))
 
-  def compile[F[_]](implicit F: Sync[F]): F[String] =
-    ShellAction(scalyrLine).compile[F].flatMap(cleanLog[F])
+  def compile[F[_]](implicit F: Sync[F]): F[List[String]] =
+    for {
+      rawLog <- ShellAction(scalyrLine).compile[F]
+      lines <- splitLines(rawLog)
+      cleaned <- cleanLog(lines)
+    } yield cleaned
+
+  def splitLines[F[_]](rawLog: String)(implicit F: Sync[F]): F[List[String]] = F.delay {
+    rawLog.trim.split("\n").toList
+  }
 
   // TODO: a bit of brute force `replace`s to make the output more readable, need a better way to do this
-  def cleanLog[F[_]](rawLog: String)(implicit F: Sync[F]): F[String] = F.delay {
-    rawLog.replace(raw"\n", "")
-      .replace(raw"\\", "")
-      .replace("\\\"", "\"")
-      .replace("\"{\"log\":\"", "")
-      .replace("\"}\"", "")
-      .replaceAll("u003c", "<")
-      .replaceAll("u003e", ">")
+  def cleanLog[F[_]](logsLines: List[String])(implicit F: Sync[F]): F[List[String]] = F.delay {
+    logsLines.map(
+      _.replace(raw"\n", "")
+        .replace(raw"\\", "")
+        .replace("\\\"", "\"")
+        .replace("\"{\"log\":\"", "")
+        .replace("\"}\"", "")
+        .replaceAll("u003c", "<")
+        .replaceAll("u003e", ">")
+    )
   }
 }
 

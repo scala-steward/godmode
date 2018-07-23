@@ -2,6 +2,7 @@ package com.jcranky.godmode.actions
 
 import cats.data.NonEmptyList
 import cats.effect.IO
+import cats.instances.list._
 import cats.instances.string._
 import cats.syntax.eq._
 import utest._
@@ -48,11 +49,22 @@ object ScalyrActionTest extends TestSuite {
 
     "clean the output log data" - {
       "replace encoded < and > with the actual characters" - {
-        val rawLog = "u003cTAGu003e"
-        val result = action.cleanLog[IO](rawLog).unsafeRunSync()
+        val logLine = List("u003cTAGu003e")
+        val result = action.cleanLog[IO](logLine).unsafeRunSync()
 
-        assert(result === "<TAG>")
+        assert(result === List("<TAG>"))
       }
+    }
+
+    "return multiple lines in a List of Strings" - {
+      val rawLog =
+        """
+          |several lines here
+          |and here
+        """.stripMargin
+      val result = action.splitLines[IO](rawLog).unsafeRunSync()
+
+      assert(result === List("several lines here", "and here"))
     }
   }
 }
