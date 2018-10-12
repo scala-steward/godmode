@@ -1,17 +1,18 @@
 package com.jcranky.godmode.io
 
-import cats.effect.IO
+import cats.effect.{IO, Timer}
 import cats.instances.string._
 import cats.syntax.eq._
 import com.jcranky.godmode.io.Retry._
 import utest._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 object RetryTest extends TestSuite {
 
   val tests = Tests {
     "retry a failed io" - {
+      implicit val timer: Timer[IO] =
+        IO.timer(scala.concurrent.ExecutionContext.Implicits.global)
+
       var fail = true
       val io = IO {
         if (fail) {
