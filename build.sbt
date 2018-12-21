@@ -1,9 +1,9 @@
 
 name := "godmode"
 organization := "com.jcranky"
-scalaVersion := "2.12.7"
+scalaVersion := "2.12.8"
 
-version := "0.1-M8"
+version := "0.1-M9"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -17,9 +17,8 @@ scalacOptions ++= Seq(
   "-Xmacro-settings:materialize-derivations"
 )
 
-testFrameworks += new TestFramework("minitest.runner.Framework")
-
 cancelable in Global := true
+
 
 licenses += ("GPL-3.0", url("http://www.opensource.org/licenses/gpl-3.0.html"))
 

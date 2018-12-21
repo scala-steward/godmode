@@ -8,6 +8,7 @@ import doobie.util.log.LogHandler
 import doobie.util.transactor.Transactor
 import cats.syntax.functor._
 
+@deprecated("Use DoobieWrappers.update instead", "0.1-M9")
 case class DoobieUpdateAction(fragment: Fragment, logQueries: Boolean = false) {
 
   def dryRun[F[_]: Sync]: F[Int] = {

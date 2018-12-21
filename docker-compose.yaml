@@ -1,0 +1,10 @@
+version: "2"
+services:
+  godmode-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: godmode-db
+      POSTGRES_USER: godmode
+      POSTGRES_PASSWORD: godmode-pass
+    ports:
+      - "6666:5432"
