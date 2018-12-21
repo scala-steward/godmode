@@ -8,5 +8,5 @@ libraryDependencies ++= Seq(
   "co.fs2" %% "fs2-core" % fs2Version,
   "co.fs2" %% "fs2-io" % fs2Version,
   "org.tpolecat" %% "doobie-core" % doobieVersion,
-  "com.lihaoyi" %% "utest" % "0.6.6" % "test"
+  "io.monix" %% "minitest" % "2.2.2" % "test"
 )
