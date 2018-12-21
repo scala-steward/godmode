@@ -17,7 +17,7 @@ scalacOptions ++= Seq(
   "-Xmacro-settings:materialize-derivations"
 )
 
-testFrameworks += new TestFramework("com.jcranky.godmode.GodModeTestFramework")
+testFrameworks += new TestFramework("minitest.runner.Framework")
 
 cancelable in Global := true
 
