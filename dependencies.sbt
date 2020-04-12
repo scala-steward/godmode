@@ -1,7 +1,7 @@
 
-val catsEffectVersion = "1.4.0"
-val fs2Version = "1.0.5"
-val doobieVersion = "0.5.4"
+val catsEffectVersion = "2.1.2"
+val fs2Version = "2.3.0"
+val doobieVersion = "0.9.0"
 
 libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-effect" % catsEffectVersion,

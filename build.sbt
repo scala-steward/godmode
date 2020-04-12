@@ -1,7 +1,7 @@
 
 name := "godmode"
 organization := "com.jcranky"
-scalaVersion := "2.12.7"
+scalaVersion := "2.13.1"
 
 version := "0.1-M8"
 
@@ -10,7 +10,6 @@ scalacOptions ++= Seq(
   "-feature",
   "-unchecked",
   "-language:higherKinds",
-  "-Yno-adapted-args",
   "-Ywarn-unused",
   "-Xfatal-warnings",
   "-Xlint",

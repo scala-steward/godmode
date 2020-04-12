@@ -4,7 +4,7 @@ import cats.effect.Async
 import cats.syntax.apply._
 import cats.syntax.flatMap._
 import doobie.implicits._
-import doobie.util.composite.Composite
+import doobie.util.Read
 import doobie.util.fragment.Fragment
 import doobie.util.log.LogHandler
 import doobie.util.transactor.Transactor
@@ -14,7 +14,7 @@ case class DoobieQueryAction[F[_]](fragment: Fragment, failIfEmpty: Boolean = fa
 
   // TODO: dryRun?
 
-  def compile[T: Composite](xa: Transactor[F])(implicit F: Async[F]): F[List[T]] = {
+  def compile[T: Read](xa: Transactor[F])(implicit F: Async[F]): F[List[T]] = {
     implicit val logHandler: LogHandler =
       if (logQueries) LogHandler.jdkLogHandler else LogHandler.nop
 
