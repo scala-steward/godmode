@@ -1,6 +1,6 @@
 
 val catsEffectVersion = "2.3.1"
-val fs2Version = "2.4.6"
+val fs2Version = "2.5.0"
 val doobieVersion = "0.9.4"
 
 libraryDependencies ++= Seq(
