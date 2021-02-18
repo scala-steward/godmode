@@ -1,5 +1,5 @@
 
-val catsEffectVersion = "2.3.1"
+val catsEffectVersion = "2.3.3"
 val fs2Version = "2.5.1"
 val doobieVersion = "0.10.0"
 
