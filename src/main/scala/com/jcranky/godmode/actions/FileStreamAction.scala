@@ -2,10 +2,11 @@ package com.jcranky.godmode.actions
 
 import java.nio.file.{Files, Path, Paths}
 
-import cats.effect.{Blocker, ContextShift, Sync}
+import cats.effect.Sync
 import cats.syntax.flatMap._
 import cats.syntax.functor._
 import fs2.{io, text}
+import cats.effect.Resource
 
 case class FileStreamAction(fileName: String) {
 
@@ -27,7 +28,7 @@ case class FileStreamAction(fileName: String) {
   }
 
   private def processStream[F[_] : Sync : ContextShift](logic: String => F[String]): F[Unit] =
-    fs2.Stream.resource(Blocker[F]).flatMap { blocker =>
+    fs2.Stream.resource(Resource.unit[F]).flatMap { blocker =>
       io.file.readAll[F](sourcePath, blocker, chunkSize = 4096)
         .through(text.utf8Decode)
         .through(text.lines)
